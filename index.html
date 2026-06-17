@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Note — Wolday</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0a0a0a;--white:#f5f2eb;
+  --gold:#c8a96e;--gold-dim:#8a6f42;--gold-glow:rgba(200,169,110,0.13);
+  --gray:#1e1e1e;--gray2:#2a2a2a;--gray3:#3d3d3d;--gray4:#5a5a5a;--gray5:#888;
+  --green:#2d6a4f;--green-light:#52b788;--green-bg:rgba(45,106,79,0.08);
+  --red:#c1121f;--red-light:#e5383b;--red-bg:rgba(193,18,31,0.08);
+}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+
+.app{max-width:700px;margin:0 auto;padding:0 24px 100px}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:28px 0 0;margin-bottom:0}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.12em;color:var(--gold);text-decoration:none}
+.logo span{color:var(--white)}
+.site-badge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray4);border:1px solid var(--gray3);padding:4px 10px;border-radius:2px}
+
+.hero{margin:36px 0 28px}
+.hero-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.hero-eyebrow::after{content:'';flex:1;height:1px;background:var(--gold-dim);opacity:.4;max-width:50px}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(34px,6vw,54px);line-height:.95;letter-spacing:.02em;margin-bottom:10px}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{font-size:14px;color:var(--gray5);max-width:460px;font-weight:300;line-height:1.8}
+
+.panel{background:var(--gray2);border:1px solid var(--gray3);border-radius:4px;padding:22px;margin-bottom:16px}
+.section-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray5);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-label::before{content:'';width:16px;height:1px;background:var(--gray4)}
+
+textarea.tx{width:100%;min-height:220px;resize:vertical;font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.7;color:var(--white);background:rgba(0,0,0,.3);border:1px solid var(--gray3);border-radius:3px;padding:14px;outline:none;transition:border-color .2s}
+textarea.tx:focus{border-color:var(--gold-dim)}
+textarea.tx::placeholder{color:var(--gray4)}
+.char-count{text-align:right;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gray4);margin-top:6px}
+
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.btn-outline{height:46px;border:1px solid var(--gray3);border-radius:3px;background:none;color:var(--white);font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.1em;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-outline:hover{border-color:var(--gray4);background:rgba(255,255,255,.03)}
+.btn-gold{height:46px;background:var(--gold);color:#000;border:none;border-radius:3px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.1em;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-gold:hover{background:#d4b57a}
+.btn-gold:disabled,.btn-outline:disabled{opacity:.5;cursor:not-allowed}
+
+.status-row{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:8px}
+.status-msg{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gray5)}
+.status-msg.ok{color:var(--green-light)}
+.status-msg.err{color:var(--red-light)}
+.last-published{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gray4)}
+
+.site-footer{margin-top:60px;padding:20px 0;border-top:1px solid var(--gray3);display:flex;align-items:center;justify-content:space-between}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.12em;color:var(--gold-dim)}
+.footer-note{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gray4);letter-spacing:.06em}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="site-header">
+    <a href="https://wolday.us" class="logo">WOLDAY<span>.US</span></a>
+    <div class="site-badge">Note — Open</div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-eyebrow">Public Note</div>
+    <h1>Type it. <em>Publish</em> it.</h1>
+    <p>Anything published here replaces the last version. Anyone with this link can read it — and publish over it.</p>
+  </div>
+
+  <div class="panel">
+    <div class="section-label">Editor</div>
+    <textarea class="tx" id="note-tx" placeholder="Type your text here..."></textarea>
+    <div class="char-count" id="char-count">0 characters</div>
+    <div class="btn-row">
+      <button class="btn-outline" id="copy-btn" onclick="copyNote()">Copy</button>
+      <button class="btn-gold" id="publish-btn" onclick="publishNote()">Publish</button>
+    </div>
+    <div class="status-row">
+      <div class="status-msg" id="status-msg">Loading current note…</div>
+      <div class="last-published" id="last-published"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-logo">WOLDAY</div>
+    <div class="footer-note">PUBLIC NOTE · NO LOGIN</div>
+  </footer>
+</div>
+
+<script>
+const tx = document.getElementById('note-tx');
+const charCount = document.getElementById('char-count');
+const statusMsg = document.getElementById('status-msg');
+const lastPublished = document.getElementById('last-published');
+const publishBtn = document.getElementById('publish-btn');
+const copyBtn = document.getElementById('copy-btn');
+
+function updateCharCount(){
+  charCount.textContent = tx.value.length + ' characters';
+}
+tx.addEventListener('input', updateCharCount);
+
+function setStatus(msg, cls){
+  statusMsg.textContent = msg;
+  statusMsg.className = 'status-msg' + (cls ? ' ' + cls : '');
+}
+
+async function loadNote(){
+  try{
+    const res = await fetch('/api/note');
+    if(!res.ok) throw new Error('load failed');
+    const data = await res.json();
+    tx.value = data.text || '';
+    updateCharCount();
+    if(data.updatedAt){
+      lastPublished.textContent = 'Last published: ' + new Date(data.updatedAt).toLocaleString();
+    }
+    setStatus('Loaded current note.');
+  }catch(err){
+    setStatus('Could not load note. You can still type and publish.', 'err');
+  }
+}
+
+async function publishNote(){
+  publishBtn.disabled = true;
+  setStatus('Publishing…');
+  try{
+    const res = await fetch('/api/note', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: tx.value })
+    });
+    if(!res.ok) throw new Error('publish failed');
+    const data = await res.json();
+    lastPublished.textContent = 'Last published: ' + new Date(data.updatedAt).toLocaleString();
+    setStatus('Published.', 'ok');
+  }catch(err){
+    setStatus('Publish failed. Try again.', 'err');
+  }finally{
+    publishBtn.disabled = false;
+  }
+}
+
+function copyNote(){
+  navigator.clipboard.writeText(tx.value).then(()=>{
+    const orig = copyBtn.textContent;
+    copyBtn.textContent = 'Copied!';
+    setTimeout(()=>copyBtn.textContent = orig, 1500);
+  });
+}
+
+loadNote();
+</script>
+
+</body>
+</html>
