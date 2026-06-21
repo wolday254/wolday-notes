@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notes — Wolday</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0a0a0a;--white:#f5f2eb;
+  --gold:#c8a96e;--gold-dim:#8a6f42;
+  --gray:#1e1e1e;--gray2:#2a2a2a;--gray3:#3d3d3d;--gray4:#5a5a5a;--gray5:#888;
+  --green-light:#52b788;--red-light:#e5383b;
+}
+html,body{background:var(--black);color:var(--white);font-family:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+
+.app{max-width:680px;margin:0 auto;padding:0 24px 100px}
+
+/* HEADER */
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:28px 0 0}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.12em;color:var(--gold);text-decoration:none}
+.logo span{color:var(--white)}
+.site-badge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray4);border:1px solid var(--gray3);padding:4px 10px;border-radius:2px}
+
+/* HERO */
+.hero{margin:36px 0 28px}
+.hero-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(34px,6vw,54px);line-height:.95;letter-spacing:.02em;margin-bottom:10px}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{font-size:14px;color:var(--gray5);max-width:460px;font-weight:300;line-height:1.8}
+
+/* PANEL */
+.panel{background:var(--gray2);border:1px solid var(--gray3);border-radius:4px;padding:22px;margin-bottom:16px}
+.section-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray5);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-label::before{content:'';width:16px;height:1px;background:var(--gray4)}
+
+/* FORM */
+.field{margin-bottom:14px}
+.field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray5);margin-bottom:6px}
+.field input{width:100%;height:46px;background:rgba(0,0,0,.3);border:1px solid var(--gray3);border-radius:3px;color:var(--white);font-family:'IBM Plex Mono',monospace;font-size:14px;padding:0 16px;outline:none;transition:border-color .2s;-webkit-appearance:none}
+.field input:focus{border-color:var(--gold-dim)}
+.field input::placeholder{color:var(--gray4)}
+
+/* TEXTAREA */
+textarea.tx{width:100%;min-height:240px;resize:vertical;font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.7;color:var(--white);background:rgba(0,0,0,.3);border:1px solid var(--gray3);border-radius:3px;padding:14px;outline:none;transition:border-color .2s;-webkit-appearance:none;cursor:text;user-select:text;-webkit-user-select:text;pointer-events:auto}
+textarea.tx:focus{border-color:var(--gold-dim)}
+textarea.tx::placeholder{color:var(--gray4)}
+.char-count{text-align:right;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gray4);margin-top:6px}
+
+/* BUTTONS */
+.btn-gold{width:100%;height:46px;background:var(--gold);color:#000;border:none;border-radius:3px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.12em;cursor:pointer;transition:background .2s;margin-top:6px}
+.btn-gold:hover{background:#d4b57a}
+.btn-gold:disabled{opacity:.5;cursor:not-allowed}
+.btn-outline{height:46px;border:1px solid var(--gray3);border-radius:3px;background:none;color:var(--white);font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.1em;cursor:pointer;transition:all .15s;width:100%;margin-top:8px}
+.btn-outline:hover{border-color:var(--gray4);background:rgba(255,255,255,.03)}
+
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.btn-row .btn-outline,.btn-row .btn-gold{margin-top:0}
+
+/* STATUS */
+.status-msg{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gray5);margin-top:10px;min-height:18px}
+.status-msg.ok{color:var(--green-light)}
+.status-msg.err{color:var(--red-light)}
+
+/* TOKEN BOX */
+.token-box{background:rgba(0,0,0,.4);border:1px solid var(--gold-dim);border-radius:3px;padding:14px 16px;margin-bottom:16px}
+.token-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.token-url{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--white);word-break:break-all;margin-bottom:10px}
+.token-note{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gray5);line-height:1.6}
+.copy-token-btn{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold);background:none;border:1px solid var(--gold-dim);padding:4px 12px;border-radius:2px;cursor:pointer;margin-top:8px;letter-spacing:.06em}
+.copy-token-btn:hover{background:rgba(200,169,110,.08)}
+
+/* TOGGLE */
+.toggle-link{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gray5);text-align:center;margin-top:14px;cursor:pointer}
+.toggle-link span{color:var(--gold);text-decoration:underline;cursor:pointer}
+
+/* USER ROW */
+.user-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.user-name{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gray5)}
+.user-name strong{color:var(--white)}
+.sign-out{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gray4);background:none;border:none;cursor:pointer;text-decoration:underline;padding:0}
+.sign-out:hover{color:var(--gray5)}
+
+.last-saved{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gray4);margin-top:8px}
+
+/* FOOTER */
+.site-footer{margin-top:60px;padding:20px 0;border-top:1px solid var(--gray3);display:flex;align-items:center;justify-content:space-between}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.12em;color:var(--gold-dim)}
+.footer-note{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gray4);letter-spacing:.06em}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="site-header">
+    <a href="/" class="logo">WOLDAY<span>.US</span></a>
+    <div class="site-badge" id="header-badge">Private Notes</div>
+  </header>
+
+  <!-- ── AUTH VIEW ── -->
+  <div id="auth-view" style="display:none">
+    <div class="hero">
+      <div class="hero-eyebrow">Private Notes</div>
+      <h1>Your note.<br><em>Your token.</em></h1>
+      <p>Create an account to get a private token URL — only you can read and write your note.</p>
+    </div>
+
+    <div class="panel">
+      <div class="section-label" id="auth-label">Create Account</div>
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="username" placeholder="e.g. wolday" autocomplete="username" autocorrect="off" autocapitalize="none" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Min. 6 characters" autocomplete="current-password">
+      </div>
+      <button class="btn-gold" id="auth-btn" onclick="submitAuth()">Create Account</button>
+      <div class="status-msg" id="auth-status"></div>
+      <div class="toggle-link" id="toggle-link">Already have an account? <span onclick="toggleMode()">Log in</span></div>
+    </div>
+  </div>
+
+  <!-- ── NOTE VIEW ── -->
+  <div id="note-view" style="display:none">
+    <div class="hero">
+      <div class="hero-eyebrow">Private Note</div>
+      <h1>Type it. <em>Publish</em> it.</h1>
+    </div>
+
+    <div class="token-box" id="token-box" style="display:none">
+      <div class="token-label">Your private token URL — save this</div>
+      <div class="token-url" id="token-url-display"></div>
+      <div class="token-note">Bookmark this or paste it after notes.wolday.us/ to access your note on any device without logging in.</div>
+      <button class="copy-token-btn" onclick="copyTokenUrl()">Copy URL</button>
+    </div>
+
+    <div class="panel">
+      <div class="user-row">
+        <div class="user-name">Signed in as <strong id="note-username"></strong></div>
+        <button class="sign-out" onclick="signOut()">Sign out</button>
+      </div>
+      <div class="section-label">Editor</div>
+      <textarea class="tx" id="note-tx" placeholder="Type your note here..."></textarea>
+      <div class="char-count" id="char-count">0 characters</div>
+      <div class="btn-row">
+        <button class="btn-outline" onclick="copyNote()">Copy</button>
+        <button class="btn-gold" id="publish-btn" onclick="publishNote()">Publish</button>
+      </div>
+      <div class="status-msg" id="note-status"></div>
+      <div class="last-saved" id="last-saved"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-logo">WOLDAY</div>
+    <div class="footer-note">PRIVATE NOTES</div>
+  </footer>
+</div>
+
+<script>
+// ── STATE
+let currentToken = null;
+let authMode = 'signup';
+
+// ── ROUTING
+const path = window.location.pathname;
+const tokenMatch = path.match(/^\/t\/([a-z0-9]+)$/i);
+
+if (tokenMatch) {
+  // Token URL — show note view directly
+  currentToken = tokenMatch[1];
+  showNoteView(currentToken, null, false);
+} else {
+  // Check if already logged in via sessionStorage
+  const saved = sessionStorage.getItem('wn_session');
+  if (saved) {
+    try {
+      const { token, username } = JSON.parse(saved);
+      currentToken = token;
+      showNoteView(token, username, true);
+    } catch {
+      sessionStorage.removeItem('wn_session');
+      showAuthView();
+    }
+  } else {
+    showAuthView();
+  }
+}
+
+// ── AUTH
+function toggleMode() {
+  authMode = authMode === 'signup' ? 'login' : 'signup';
+  document.getElementById('auth-label').textContent = authMode === 'signup' ? 'Create Account' : 'Log In';
+  document.getElementById('auth-btn').textContent = authMode === 'signup' ? 'Create Account' : 'Log In';
+  document.getElementById('toggle-link').innerHTML = authMode === 'signup'
+    ? 'Already have an account? <span onclick="toggleMode()">Log in</span>'
+    : 'New here? <span onclick="toggleMode()">Create an account</span>';
+  setAuthStatus('');
+}
+
+async function submitAuth() {
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const btn = document.getElementById('auth-btn');
+
+  if (!username || !password) { setAuthStatus('Please fill in both fields.', 'err'); return; }
+
+  btn.disabled = true;
+  setAuthStatus(authMode === 'signup' ? 'Creating account…' : 'Logging in…');
+
+  try {
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: authMode, username, password })
+    });
+    const data = await res.json();
+
+    if (!res.ok) { setAuthStatus(data.error || 'Something went wrong.', 'err'); return; }
+
+    sessionStorage.setItem('wn_session', JSON.stringify({ token: data.token, username: data.username }));
+    currentToken = data.token;
+    showNoteView(data.token, data.username, authMode === 'signup');
+
+  } catch {
+    setAuthStatus('Network error. Try again.', 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function setAuthStatus(msg, cls) {
+  const el = document.getElementById('auth-status');
+  el.textContent = msg;
+  el.className = 'status-msg' + (cls ? ' ' + cls : '');
+}
+
+// ── NOTE VIEW
+async function showNoteView(token, username, showTokenBox) {
+  document.getElementById('auth-view').style.display = 'none';
+  document.getElementById('note-view').style.display = 'block';
+
+  // Show username if known, otherwise fetch from API
+  if (username) {
+    document.getElementById('note-username').textContent = username;
+  }
+
+  // Show token URL box for new signups
+  if (showTokenBox) {
+    const tokenUrl = `${window.location.origin}/t/${token}`;
+    document.getElementById('token-url-display').textContent = tokenUrl;
+    document.getElementById('token-box').style.display = 'block';
+  }
+
+  // Load note
+  setNoteStatus('Loading…');
+  try {
+    const res = await fetch(`/api/note/${token}`);
+    const data = await res.json();
+    if (!res.ok) { setNoteStatus('Could not load note.', 'err'); return; }
+    document.getElementById('note-tx').value = data.text || '';
+    updateCharCount();
+    if (data.updatedAt) {
+      document.getElementById('last-saved').textContent = 'Last saved: ' + new Date(data.updatedAt).toLocaleString();
+    }
+    if (!username && data.username) {
+      document.getElementById('note-username').textContent = data.username;
+    }
+    setNoteStatus('');
+  } catch {
+    setNoteStatus('Could not load note.', 'err');
+  }
+
+  // Set up textarea
+  const tx = document.getElementById('note-tx');
+  tx.addEventListener('input', updateCharCount);
+  tx.addEventListener('click', () => tx.focus());
+}
+
+function showAuthView() {
+  document.getElementById('auth-view').style.display = 'block';
+  document.getElementById('note-view').style.display = 'none';
+}
+
+async function publishNote() {
+  const btn = document.getElementById('publish-btn');
+  const text = document.getElementById('note-tx').value;
+  btn.disabled = true;
+  setNoteStatus('Publishing…');
+
+  try {
+    const res = await fetch(`/api/note/${currentToken}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
+    });
+    const data = await res.json();
+    if (!res.ok) { setNoteStatus(data.error || 'Publish failed.', 'err'); return; }
+    document.getElementById('last-saved').textContent = 'Last saved: ' + new Date(data.updatedAt).toLocaleString();
+    setNoteStatus('Published.', 'ok');
+  } catch {
+    setNoteStatus('Network error. Try again.', 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function copyNote() {
+  const tx = document.getElementById('note-tx');
+  navigator.clipboard.writeText(tx.value).then(() => {
+    const btn = event.target;
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = orig, 1500);
+  });
+}
+
+function copyTokenUrl() {
+  const url = document.getElementById('token-url-display').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = event.target;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy URL', 1500);
+  });
+}
+
+function signOut() {
+  sessionStorage.removeItem('wn_session');
+  currentToken = null;
+  window.location.href = '/';
+}
+
+function updateCharCount() {
+  const tx = document.getElementById('note-tx');
+  document.getElementById('char-count').textContent = tx.value.length + ' characters';
+}
+
+function setNoteStatus(msg, cls) {
+  const el = document.getElementById('note-status');
+  el.textContent = msg;
+  el.className = 'status-msg' + (cls ? ' ' + cls : '');
+}
+</script>
+
+</body>
+</html>
