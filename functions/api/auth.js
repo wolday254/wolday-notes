@@ -70,6 +70,21 @@ export async function onRequestPost(context) {
 
     return Response.json({ token: stored.token, username: cleanUsername });
 
+  } else if (action === 'rotate') {
+    const { oldToken } = body;
+    const stored = await env.NOTE_KV.get(userKey, { type: 'json' });
+    if (!stored || stored.token !== oldToken) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    // Get existing note content
+    const noteData = await env.NOTE_KV.get(`token:${oldToken}`, { type: 'json' });
+    // Generate new token, migrate note
+    const newToken = generateToken();
+    await env.NOTE_KV.put(userKey, JSON.stringify({ ...stored, token: newToken }));
+    await env.NOTE_KV.put(`token:${newToken}`, JSON.stringify({ ...noteData, username: cleanUsername }));
+    await env.NOTE_KV.delete(`token:${oldToken}`);
+    return Response.json({ token: newToken, username: cleanUsername });
+
   } else {
     return Response.json({ error: 'Invalid action' }, { status: 400 });
   }
