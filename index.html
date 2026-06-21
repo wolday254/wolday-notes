@@ -129,11 +129,14 @@ textarea.tx::placeholder{color:var(--gray4)}
       <h1>Type it. <em>Publish</em> it.</h1>
     </div>
 
-    <div class="token-box" id="token-box" style="display:none">
-      <div class="token-label">Your private token URL — save this</div>
+    <div class="token-box" id="token-box">
+      <div class="token-label">Your private token URL</div>
       <div class="token-url" id="token-url-display"></div>
-      <div class="token-note">Bookmark this or paste it after notes.wolday.us/ to access your note on any device without logging in.</div>
-      <button class="copy-token-btn" onclick="copyTokenUrl()">Copy URL</button>
+      <div class="token-note">Paste this after notes.wolday.us/ on any device to access your note without logging in.</div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        <button class="copy-token-btn" onclick="copyTokenUrl()">Copy URL</button>
+        <button class="copy-token-btn" onclick="refreshToken()" id="refresh-token-btn">Refresh Token</button>
+      </div>
     </div>
 
     <div class="panel">
@@ -247,12 +250,9 @@ async function showNoteView(token, username, showTokenBox) {
     document.getElementById('note-username').textContent = username;
   }
 
-  // Show token URL box for new signups
-  if (showTokenBox) {
-    const tokenUrl = `${window.location.origin}/t/${token}`;
-    document.getElementById('token-url-display').textContent = tokenUrl;
-    document.getElementById('token-box').style.display = 'block';
-  }
+  // Always show token URL
+  const tokenUrl = `${window.location.origin}/t/${token}`;
+  document.getElementById('token-url-display').textContent = tokenUrl;
 
   // Load note
   setNoteStatus('Loading…');
@@ -324,6 +324,38 @@ function copyTokenUrl() {
     btn.textContent = 'Copied!';
     setTimeout(() => btn.textContent = 'Copy URL', 1500);
   });
+}
+
+async function refreshToken() {
+  if (!confirm('Generate a new token URL? Your old token URL will stop working.')) return;
+  const btn = document.getElementById('refresh-token-btn');
+  btn.textContent = 'Refreshing…';
+  btn.disabled = true;
+
+  // Get current session
+  const saved = sessionStorage.getItem('wn_session');
+  if (!saved) { signOut(); return; }
+  const { username } = JSON.parse(saved);
+
+  // We re-use the login endpoint but ask server to rotate token
+  try {
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'rotate', username, oldToken: currentToken })
+    });
+    const data = await res.json();
+    if (!res.ok) { btn.textContent = 'Refresh Token'; btn.disabled = false; return; }
+    currentToken = data.token;
+    sessionStorage.setItem('wn_session', JSON.stringify({ token: data.token, username }));
+    const tokenUrl = `${window.location.origin}/t/${data.token}`;
+    document.getElementById('token-url-display').textContent = tokenUrl;
+    btn.textContent = 'Refreshed!';
+    setTimeout(() => { btn.textContent = 'Refresh Token'; btn.disabled = false; }, 2000);
+  } catch {
+    btn.textContent = 'Refresh Token';
+    btn.disabled = false;
+  }
 }
 
 function signOut() {
